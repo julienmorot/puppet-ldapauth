@@ -11,6 +11,10 @@
     {
       "name": "puppetlabs-stdlib",
       "version_requirement": ">= 1.0.0"
+    },
+    {
+      "name": "camptocamp-openldap",
+      "version": "1.14.0"
     }
   ],
   "data_provider": null
