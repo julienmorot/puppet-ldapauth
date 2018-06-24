@@ -48,6 +48,11 @@ basic use of the module.
     rootpw => 'yousecretpassword',
   }
 
+  class {'ldapauth::client':
+    basedn          => 'dc=morot,dc=fr',
+    servers         => ['master.int.morot.fr', 'slave.int.morot.fr']
+  }
+
 
 
 ## Limitations
