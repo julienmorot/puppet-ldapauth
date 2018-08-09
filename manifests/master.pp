@@ -54,5 +54,24 @@ class ldapauth::master(String $basedn = $domain, String $rootpwd = 'notverysecre
     }
 
 	include ldapauth::overlay
+	include ldapauth::service
+
+	File { "base_dit.ldif":
+        path    => "/root/base_dit.ldif",
+        ensure  => file,
+        mode    => "644",
+        owner   => "root",
+        group   => "root",
+        content => template("${module_name}/base_dit.ldif.erb"),
+    }
+
+    Exec { 'add_base_dit':
+        command  => "ldapadd -x -w ${rootpwd} -D cn=admin,${basedn} -H ldap:// -f /root/base_dit.ldif && touch /root/.base_dit.ldif.done",
+        cwd      => "/root",
+        path     => '/usr/bin:/usr/sbin:/bin:/sbin',
+        provider => shell,
+        unless   => ['test -f /root/.base_dit.ldif.done'],
+        require  => [ Package["slapd"],File["base_dit.ldif"] ],
+    }
 
 }

@@ -37,5 +37,6 @@ class ldapauth::slave(String $basedn = $domain, String $rootpwd = 'notverysecret
     }
 
 	include ldapauth::overlay
+	include ldapauth::service
 
 }
