@@ -13,16 +13,17 @@ class ldapauth::master(String $basedn = $domain, String $rootpwd = 'notverysecre
   	}
 
     Package { "slapd":
-        ensure => "installed",
+        ensure       => "installed",
         responsefile => "/var/cache/debconf/slapd.preseed",
-        require => File["slapd.preseed"]
+        require      => File["slapd.preseed"]
     }
 
 	File { "/var/lib/ldap/accesslog":
-		ensure => directory,
-		owner  => "openldap",
-		group  => "openldap",
-		mode   => "700",
+		ensure  => directory,
+		owner   => "openldap",
+		group   => "openldap",
+		mode    => "700",
+		require => Package['slapd'],
 	}
 
     File { "/var/lib/ldap/accesslog/DB_CONFIG":
@@ -30,7 +31,8 @@ class ldapauth::master(String $basedn = $domain, String $rootpwd = 'notverysecre
         owner  => "openldap",
         group  => "openldap",
         mode   => "700",
-		source => "puppet:///modules/${module_name}/DB_CONFIG"
+		source => "puppet:///modules/${module_name}/DB_CONFIG",
+		require => Package['slapd'],
     }
 
     File { "provider.ldif":
@@ -48,9 +50,9 @@ class ldapauth::master(String $basedn = $domain, String $rootpwd = 'notverysecre
         path     => '/usr/bin:/usr/sbin:/bin:/sbin',
         provider => shell,
         unless   => ['test -f /root/.provider.ldif.done'],
+		require  => [ Package["slapd"],File["provider.ldif"] ],
     }
 
-
-
+	include ldapauth::overlay
 
 }

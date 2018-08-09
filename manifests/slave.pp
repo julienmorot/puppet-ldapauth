@@ -33,7 +33,9 @@ class ldapauth::slave(String $basedn = $domain, String $rootpwd = 'notverysecret
         path     => '/usr/bin:/usr/sbin:/bin:/sbin',
         provider => shell,
         unless   => ['test -f /root/.consumer.ldif.done'],
+		require  => [ Package["slapd"],File["consumer.ldif"] ]
     }
+
+	include ldapauth::overlay
+
 }
-
-
