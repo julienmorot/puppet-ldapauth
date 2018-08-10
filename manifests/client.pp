@@ -40,7 +40,7 @@ class ldapauth::client (String $basedn = 'dc=domain,dc=tld', Array $servers = ['
     }
 
     Exec {"pam_mkhomedir":
-        command     => "pam-auth-update && touch /root/.lpam_mkhomedir.done",
+        command     => "pam-auth-update && touch /root/.pam_mkhomedir.done",
         unless      => ['test -f /root/.pam_mkhomedir.done'],
         require     => Package["libpam-modules"],
     }
