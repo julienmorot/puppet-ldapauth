@@ -43,15 +43,41 @@ can include setup steps, if necessary, or it can be an example of the most
 basic use of the module.
 
 ## Usage
-  class {'ldapauth::master':
-    basedn => 'dc=morot,dc=fr',
-    rootpw => 'yousecretpassword',
-  }
+A master LDAP server :
 
-  class {'ldapauth::client':
-    basedn          => 'dc=morot,dc=fr',
-    servers         => ['master.int.morot.fr', 'slave.int.morot.fr']
-  }
+```
+node 'master' {
+    class {'ldapauth::master':
+        basedn      => 'dc=int,dc=morot,dc=fr',
+        rootpw      => 'ldappwd',
+    }
+}
+```
+
+
+A slave LDAP server :
+
+```
+node 'slave' {
+    class {'ldapauth::slave':
+        basedn      => 'dc=int,dc=morot,dc=fr',
+        rootpwd     => 'ldappwd',
+        ldapmaster  => 'master.int.morot.fr',
+        ldapreplpwd => 'ldappwd',
+    }
+}
+```
+
+A client authenticationg with PAM againts your LDAP servers :
+
+```
+node 'client' {
+    class {'ldapauth::client':
+        basedn      => 'dc=int,dc=morot,dc=fr',
+        servers     => ['master.int.morot.fr', 'slave.int.morot.fr']
+    }
+}
+```
 
 
 

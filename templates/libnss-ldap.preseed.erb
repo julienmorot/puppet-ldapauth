@@ -1,0 +1,25 @@
+# LDAP root account password:
+ldap-auth-config        ldap-auth-config/rootbindpw     password
+ldap-auth-config        ldap-auth-config/binddn string  
+# Choices: Cracklib password strength checking, Unix authentication, LDAP Authentication
+libpam-runtime  libpam-runtime/profiles multiselect     cracklib, unix, ldap
+ldap-auth-config        ldap-auth-config/dbrootlogin    boolean true
+# LDAP account for root:
+ldap-auth-config        ldap-auth-config/rootbinddn     string  cn=admin,<%= @basedn %>
+ldap-auth-config        ldap-auth-config/pam_password   select  md5
+# Reconfigure LDAP with debconf?
+ldap-auth-config        ldap-auth-config/move-to-debconf        boolean true
+# LDAP server Uniform Resource Identifier:
+<% url="" %>
+<% @servers.each do |server| %>
+<% url=url+" ldap://"+server+":389 " %>
+<% end %>
+ldap-auth-config        ldap-auth-config/ldapns/ldap-server     string  <%= url %>
+ldap-auth-config        ldap-auth-config/ldapns/base-dn string  ou=People,<%= @basedn %>
+# Should debconf manage LDAP configuration?
+ldap-auth-config        ldap-auth-config/override       boolean true
+# LDAP version to use:
+ldap-auth-config        ldap-auth-config/ldapns/ldap_version    select  3
+# Does the LDAP database require login?
+ldap-auth-config        ldap-auth-config/dblogin        boolean false
+
