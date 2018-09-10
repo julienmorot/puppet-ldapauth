@@ -36,7 +36,7 @@ class ldapauth::master(String $basedn = $domain, String $rootpwd = 'notverysecre
     }
 
     File { "provider.ldif":
-        path    => "/root/provider.ldif",
+        path    => "/root/${module_name}/provider.ldif",
         ensure  => file,
         mode    => "644",
         owner   => "root",
@@ -45,19 +45,26 @@ class ldapauth::master(String $basedn = $domain, String $rootpwd = 'notverysecre
     }
 
     Exec { 'add_provider':
-        command  => "ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /root/provider.ldif && touch /root/.provider.ldif.done",
+        command  => "ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /root/${module_name}/provider.ldif && touch /root/${module_name}/.provider.ldif.done",
         cwd      => "/root",
         path     => '/usr/bin:/usr/sbin:/bin:/sbin',
         provider => shell,
-        unless   => ['test -f /root/.provider.ldif.done'],
+        unless   => ['test -f /root/${module_name}/.provider.ldif.done'],
 		require  => [ Package["slapd"],File["provider.ldif"] ],
     }
 
-	include ldapauth::overlay
-	include ldapauth::service
 
-	File { "base_dit.ldif":
-        path    => "/root/base_dit.ldif",
+#    class {'ldapauth::ppolicy':
+#        basedn          => $basedn,
+#        rootpwd         => $rootpwd,
+#    }
+
+
+    include ldapauth::overlay
+    include ldapauth::service
+
+    File { "base_dit.ldif":
+        path    => "/root/${module_name}/base_dit.ldif",
         ensure  => file,
         mode    => "644",
         owner   => "root",
@@ -66,11 +73,11 @@ class ldapauth::master(String $basedn = $domain, String $rootpwd = 'notverysecre
     }
 
     Exec { 'add_base_dit':
-        command  => "ldapadd -x -w ${rootpwd} -D cn=admin,${basedn} -H ldap:// -f /root/base_dit.ldif && touch /root/.base_dit.ldif.done",
+        command  => "ldapadd -x -w ${rootpwd} -D cn=admin,${basedn} -H ldap:// -f /root/${module_name}/base_dit.ldif && touch /root/${module_name}/.base_dit.ldif.done",
         cwd      => "/root",
         path     => '/usr/bin:/usr/sbin:/bin:/sbin',
         provider => shell,
-        unless   => ['test -f /root/.base_dit.ldif.done'],
+        unless   => ['test -f /root/${module_name}/.base_dit.ldif.done'],
         require  => [ Package["slapd"],File["base_dit.ldif"] ],
     }
 
