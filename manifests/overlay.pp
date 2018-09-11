@@ -12,9 +12,9 @@ class ldapauth::overlay inherits ldapauth::params {
     Exec { 'add_memberof':
         command  => "ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /root/${module_name}/memberof.ldif && touch /root/${module_name}/.memberof.ldif.done",
         cwd      => "/root",
-        path     => '/usr/bin:/usr/sbin:/bin:/sbin',
+        path     => "/usr/bin:/usr/sbin:/bin:/sbin",
         provider => shell,
-        unless   => ['test -f /root/${module_name}/.memberof.ldif.done'],
+        unless   => ["test -f /root/${module_name}/.memberof.ldif.done"],
 		require  => [ Package["slapd"],File["memberof.ldif"] ],
     }
 
@@ -30,9 +30,9 @@ class ldapauth::overlay inherits ldapauth::params {
     Exec { 'add_refint':
         command  => "ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /root/${module_name}/refint.ldif && touch /root/${module_name}/.refint.ldif.done",
         cwd      => "/root",
-        path     => '/usr/bin:/usr/sbin:/bin:/sbin',
+        path     => "/usr/bin:/usr/sbin:/bin:/sbin",
         provider => shell,
-        unless   => ['test -f /root/${module_name}/.refint.ldif.done'],
+        unless   => ["test -f /root/${module_name}/.refint.ldif.done"],
 		require  => [ Package["slapd"],File["refint.ldif"] ],
     }
 

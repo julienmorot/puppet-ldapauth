@@ -49,7 +49,7 @@ class ldapauth::master(String $basedn = $domain, String $rootpwd = 'notverysecre
         cwd      => "/root",
         path     => '/usr/bin:/usr/sbin:/bin:/sbin',
         provider => shell,
-        unless   => ['test -f /root/${module_name}/.provider.ldif.done'],
+        unless   => ["test -f /root/${module_name}/.provider.ldif.done"],
 		require  => [ Package["slapd"],File["provider.ldif"] ],
     }
 
@@ -77,7 +77,7 @@ class ldapauth::master(String $basedn = $domain, String $rootpwd = 'notverysecre
         cwd      => "/root",
         path     => '/usr/bin:/usr/sbin:/bin:/sbin',
         provider => shell,
-        unless   => ['test -f /root/${module_name}/.base_dit.ldif.done'],
+        unless   => ["test -f /root/${module_name}/.base_dit.ldif.done"],
         require  => [ Package["slapd"],File["base_dit.ldif"] ],
     }
 

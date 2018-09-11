@@ -26,7 +26,7 @@ class ldapauth::client (String $basedn = 'dc=domain,dc=tld', Array $servers = ['
     Exec {"libnss_ldap":
         command		=> "auth-client-config -t nss -p lac_ldap && touch /root/${module_name}/.lac_ldap.done",
         creates		=> "/etc/init.d/libnss-ldap",
-        unless		=> ['test -f /root/${module_name}/.lac_ldap.done'],
+        unless		=> ["test -f /root/${module_name}/.lac_ldap.done"],
         require		=> Package["libnss-ldap"],
     }
 
@@ -41,7 +41,7 @@ class ldapauth::client (String $basedn = 'dc=domain,dc=tld', Array $servers = ['
 
     Exec {"pam_mkhomedir":
         command     => "pam-auth-update && touch /root/${module_name}/.pam_mkhomedir.done",
-        unless      => ['test -f /root/${module_name}/.pam_mkhomedir.done'],
+        unless      => ["test -f /root/${module_name}/.pam_mkhomedir.done"],
         require     => Package["libpam-modules"],
     }
 
@@ -63,7 +63,7 @@ class ldapauth::client (String $basedn = 'dc=domain,dc=tld', Array $servers = ['
 
     Exec {"pam_localgroup":
         command => "pam-auth-update && touch /root/${module_name}.pam_localgroup.done",
-        unless  => ['test -f /root/${module_name}/.pam_localgroup.done'],
+        unless  => ["test -f /root/${module_name}/.pam_localgroup.done"],
         require => Package["libpam-modules"],
     }
 
