@@ -36,6 +36,11 @@ class ldapauth::slave(String $basedn = $domain, String $rootpwd = 'notverysecret
 		require  => [ Package["slapd"],File["consumer.ldif"] ]
     }
 
+    class {'ldapauth::ppolicyslave':
+        basedn          => $basedn,
+        rootpwd         => $rootpwd,
+    }
+
 	include ldapauth::overlay
 	include ldapauth::service
 

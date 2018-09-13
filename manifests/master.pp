@@ -54,10 +54,10 @@ class ldapauth::master(String $basedn = $domain, String $rootpwd = 'notverysecre
     }
 
 
-#    class {'ldapauth::ppolicy':
-#        basedn          => $basedn,
-#        rootpwd         => $rootpwd,
-#    }
+    class {'ldapauth::ppolicy':
+        basedn          => $basedn,
+        rootpwd         => $rootpwd,
+    }
 
 
     include ldapauth::overlay

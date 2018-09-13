@@ -1,0 +1,27 @@
+dn: ou=PPolicy,dc=int,dc=morot,dc=fr
+objectClass: top
+objectClass: organizationalUnit
+ou: PPolicy
+
+
+dn: cn=ppolicy-default,ou=PPolicy,<%= @basedn %>
+objectClass: pwdPolicy
+objectClass: device
+objectClass: top
+cn: ppolicy-default
+pwdAllowUserChange: TRUE
+pwdAttribute: userPassword
+pwdCheckQuality: 1
+pwdExpireWarning: 600
+pwdFailureCountInterval: 30
+pwdGraceAuthNLimit: 5
+pwdInHistory: 5
+pwdLockout: TRUE
+pwdLockoutDuration: 0
+pwdMaxAge: 0
+pwdMaxFailure: 5
+pwdMinAge: 0
+pwdMinLength: 5
+pwdMustChange: FALSE
+pwdSafeModify: FALSE
+

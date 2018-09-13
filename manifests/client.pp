@@ -62,7 +62,7 @@ class ldapauth::client (String $basedn = 'dc=domain,dc=tld', Array $servers = ['
     }
 
     Exec {"pam_localgroup":
-        command => "pam-auth-update && touch /root/${module_name}.pam_localgroup.done",
+        command => "pam-auth-update && touch /root/${module_name}/.pam_localgroup.done",
         unless  => ["test -f /root/${module_name}/.pam_localgroup.done"],
         require => Package["libpam-modules"],
     }
