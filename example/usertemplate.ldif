@@ -1,0 +1,14 @@
+dn: uid=john.rambo,ou=People,dc=int,dc=morot,dc=fr
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: john.rambo
+cn: John Rambo
+givenName: John
+sn: Rambo
+loginShell: /bin/bash
+homeDirectory: /home/john.rambo
+uidNumber: 10000
+gidNumber: 10000
+userPassword: {SSHA}WGtab5+9lecj8SGsdUq17TwVRrI30LuK
+

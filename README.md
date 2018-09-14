@@ -14,6 +14,8 @@
 
 ## Description
 
+This module aims to provide a framework to manage one LDAP master and one slave 
+designed to perform users authentication.
 Start with a one- or two-sentence summary of what the module does and/or what
 problem it solves. This is your 30-second elevator pitch for your module.
 Consider including OS/Puppet version it works with.
@@ -25,22 +27,17 @@ management, etc.), this is the time to mention it.
 
 ## Setup
 
-### What ldapauth affects **OPTIONAL**
+### What ldapauth affects
 
 This module tends to provide ldap authentication :
 - Master LDAP Server
-- Slave LDAP Server
+- Slave LDAP Server for one server
 - Client configuration
+- PasswordPolicy support
 
-### Setup Requirements **OPTIONAL**
+### Setup Requirements
 
-Require https://github.com/camptocamp/puppet-openldap
-
-### Beginning with ldapauth
-
-The very basic steps needed for a user to get the module up and running. This
-can include setup steps, if necessary, or it can be an example of the most
-basic use of the module.
+Ubuntu server 16.04
 
 ## Usage
 A master LDAP server :
@@ -79,9 +76,35 @@ node 'client' {
 }
 ```
 
+Example for user and group definition :
+
+```
+dn: uid=john.rambo,ou=People,dc=int,dc=morot,dc=fr
+objectClass: inetOrgPerson
+objectClass: posixAccount
+objectClass: shadowAccount
+uid: john.rambo
+cn: John Rambo
+givenName: John
+sn: Rambo
+loginShell: /bin/bash
+homeDirectory: /home/john.rambo
+uidNumber: 10000
+gidNumber: 10000
+userPassword: {SSHA}WGtab5+9lecj8SGsdUq17TwVRrI30LuK
+
+ldapadd -x -w ldappwd -D cn=admin,dc=int,dc=morot,dc=fr -H ldap:// -f usertemplate.ldif
+
+dn: cn=LDAPUsers,ou=Groups,dc=int,dc=morot,dc=fr
+objectClass: posixGroup
+ObjectClass: top
+cn: LDAPUsers
+gidNumber: 10000
+
+ldapadd -x -w ldappwd -D cn=admin,dc=int,dc=morot,dc=fr -H ldap:// -f grouptemplate.ldif
+```
 
 
 ## Limitations
 
-A lot
-
+Only one slave

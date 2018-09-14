@@ -1,0 +1,6 @@
+dn: cn=LDAPUsers,ou=Groups,dc=int,dc=morot,dc=fr
+objectClass: posixGroup
+ObjectClass: top
+cn: LDAPUsers
+gidNumber: 10000
+
