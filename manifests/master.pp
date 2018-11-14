@@ -3,14 +3,14 @@ class ldapauth::master(String $basedn = $domain, String $rootpwd = 'notverysecre
     $pkgdep = ['ldap-utils']
     package { $pkgdep: ensure => present }
 
-	File { "slapd.preseed":
-		path    => "/var/cache/debconf/slapd.preseed",
-    	ensure  => file,
-	    mode    => "644",
-	    owner   => "root",
-	    group   => "root",
-    	content => template("${module_name}/slapd.preseed.erb"),
-  	}
+    File { "slapd.preseed":
+        path    => "/var/cache/debconf/slapd.preseed",
+        ensure  => file,
+        mode    => "644",
+        owner   => "root",
+        group   => "root",
+        content => template("${module_name}/slapd.preseed.erb"),
+    }
 
     Package { "slapd":
         ensure       => "installed",
@@ -18,21 +18,21 @@ class ldapauth::master(String $basedn = $domain, String $rootpwd = 'notverysecre
         require      => File["slapd.preseed"]
     }
 
-	File { "/var/lib/ldap/accesslog":
-		ensure  => directory,
-		owner   => "openldap",
-		group   => "openldap",
-		mode    => "700",
-		require => Package['slapd'],
-	}
+    File { "/var/lib/ldap/accesslog":
+        ensure  => directory,
+        owner   => "openldap",
+        group   => "openldap",
+        mode    => "700",
+        require => Package['slapd'],
+    }
 
     File { "/var/lib/ldap/accesslog/DB_CONFIG":
         ensure => present,
         owner  => "openldap",
         group  => "openldap",
         mode   => "700",
-		source => "puppet:///modules/${module_name}/DB_CONFIG",
-		require => Package['slapd'],
+        source => "puppet:///modules/${module_name}/DB_CONFIG",
+        require => Package['slapd'],
     }
 
     File { "provider.ldif":
@@ -50,7 +50,7 @@ class ldapauth::master(String $basedn = $domain, String $rootpwd = 'notverysecre
         path     => '/usr/bin:/usr/sbin:/bin:/sbin',
         provider => shell,
         unless   => ["test -f /root/${module_name}/.provider.ldif.done"],
-		require  => [ Package["slapd"],File["provider.ldif"] ],
+        require  => [ Package["slapd"],File["provider.ldif"] ],
     }
 
 

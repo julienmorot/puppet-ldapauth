@@ -3,14 +3,14 @@ class ldapauth::slave(String $basedn = $domain, String $rootpwd = 'notverysecret
     $pkgdep = ['ldap-utils']
     package { $pkgdep: ensure => present }
 
-	File { "slapd.preseed":
-		path    => "/var/cache/debconf/slapd.preseed",
-    	ensure  => file,
-	    mode    => "644",
-	    owner   => "root",
-	    group   => "root",
-    	content => template("${module_name}/slapd.preseed.erb"),
-  	}
+    File { "slapd.preseed":
+        path    => "/var/cache/debconf/slapd.preseed",
+        ensure  => file,
+        mode    => "644",
+        owner   => "root",
+        group   => "root",
+        content => template("${module_name}/slapd.preseed.erb"),
+    }
 
     Package { "slapd":
         ensure => "installed",
@@ -33,7 +33,7 @@ class ldapauth::slave(String $basedn = $domain, String $rootpwd = 'notverysecret
         path     => "/usr/bin:/usr/sbin:/bin:/sbin",
         provider => shell,
         unless   => ["test -f /root/${module_name}/.consumer.ldif.done"],
-		require  => [ Package["slapd"],File["consumer.ldif"] ]
+        require  => [ Package["slapd"],File["consumer.ldif"] ]
     }
 
     class {'ldapauth::ppolicyslave':
@@ -41,7 +41,7 @@ class ldapauth::slave(String $basedn = $domain, String $rootpwd = 'notverysecret
         rootpwd         => $rootpwd,
     }
 
-	include ldapauth::overlay
-	include ldapauth::service
+    include ldapauth::overlay
+    include ldapauth::service
 
 }

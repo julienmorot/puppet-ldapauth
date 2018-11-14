@@ -1,7 +1,7 @@
 class ldapauth::client (String $basedn = 'dc=domain,dc=tld', Array $servers = ['ldap:://srv1', 'ldap://srv2']) inherits ldapauth::params { 
 
-	$pkgdep = ['libpam-modules']
-	Package { $pkgdep: ensure => present }
+    $pkgdep = ['libpam-modules']
+    Package { $pkgdep: ensure => present }
 
     File { "libnss-ldap.preseed":
         path    => "/var/cache/debconf/libnss-ldap.preseed",
@@ -13,10 +13,10 @@ class ldapauth::client (String $basedn = 'dc=domain,dc=tld', Array $servers = ['
     }
 
     Package { "libnss-ldap":
-        ensure			=> "present",
-        responsefile	=> "/var/cache/debconf/libnss-ldap.preseed",
-        require			=> File["libnss-ldap.preseed"],
-        notify			=> Exec["libnss_ldap"],
+        ensure          => "present",
+        responsefile    => "/var/cache/debconf/libnss-ldap.preseed",
+        require         => File["libnss-ldap.preseed"],
+        notify          => Exec["libnss_ldap"],
     }
 
     Service { "libnss-ldap":
@@ -24,10 +24,10 @@ class ldapauth::client (String $basedn = 'dc=domain,dc=tld', Array $servers = ['
     }
 
     Exec {"libnss_ldap":
-        command		=> "auth-client-config -t nss -p lac_ldap && touch /root/${module_name}/.lac_ldap.done",
-        creates		=> "/etc/init.d/libnss-ldap",
-        unless		=> ["test -f /root/${module_name}/.lac_ldap.done"],
-        require		=> Package["libnss-ldap"],
+        command     => "auth-client-config -t nss -p lac_ldap && touch /root/${module_name}/.lac_ldap.done",
+        creates     => "/etc/init.d/libnss-ldap",
+        unless      => ["test -f /root/${module_name}/.lac_ldap.done"],
+        require     => Package["libnss-ldap"],
     }
 
     File { "pam_mkhomedir":
