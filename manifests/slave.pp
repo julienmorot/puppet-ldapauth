@@ -19,7 +19,7 @@ class ldapauth::slave(String $basedn = $domain, String $rootpwd = 'notverysecret
     }
 
     File { "consumer.ldif":
-        path    => "/root/${module_name}/consumer.ldif",
+        path    => "/root/.${module_name}/consumer.ldif",
         ensure  => file,
         mode    => "644",
         owner   => "root",
@@ -28,11 +28,11 @@ class ldapauth::slave(String $basedn = $domain, String $rootpwd = 'notverysecret
     }
 
     Exec { 'add_consumer':
-        command  => "ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /root/${module_name}/consumer.ldif && touch /root/${module_name}/.consumer.ldif.done",
+        command  => "ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /root/.${module_name}/consumer.ldif && touch /root/.${module_name}/consumer.ldif.done",
         cwd      => "/root",
         path     => "/usr/bin:/usr/sbin:/bin:/sbin",
         provider => shell,
-        unless   => ["test -f /root/${module_name}/.consumer.ldif.done"],
+        unless   => ["test -f /root/.${module_name}/consumer.ldif.done"],
         require  => [ Package["slapd"],File["consumer.ldif"] ]
     }
 
