@@ -44,36 +44,59 @@ A master LDAP server :
 
 ```
 node 'master' {
-    class {'ldapauth::master':
-        basedn      => 'dc=int,dc=morot,dc=fr',
-        rootpw      => 'ldappwd',
-    }
+    include ldapauth::master
 }
 ```
 
+Then configure Hiera, for example :
+
+/etc/puppetlabs/code/environments/production/data/common.yaml
+
+```
+---
+ldapauth::master::basedn: dc=int,dc=morot,dc=fr
+ldapauth::master::rootpwd: ldappwd
+```
 
 A slave LDAP server :
 
 ```
 node 'slave' {
-    class {'ldapauth::slave':
-        basedn      => 'dc=int,dc=morot,dc=fr',
-        rootpwd     => 'ldappwd',
-        ldapmaster  => 'master.int.morot.fr',
-        ldapreplpwd => 'ldappwd',
-    }
+    include ldapauth::slave
 }
 ```
+
+Then configure Hiera, for example :
+
+/etc/puppetlabs/code/environments/production/data/common.yaml
+
+```
+---
+ldapauth::slave::basedn: dc=int,dc=morot,dc=fr
+ldapauth::slave::rootpwd: ldappwd
+ldapauth::slave::ldapmaster: master.int.morot.fr
+ldapauth::slave::ldapreplpwd: ldappwd
+```
+
 
 A client authenticationg with PAM againts your LDAP servers :
 
 ```
 node 'client' {
-    class {'ldapauth::client':
-        basedn      => 'dc=int,dc=morot,dc=fr',
-        servers     => ['master.int.morot.fr', 'slave.int.morot.fr']
-    }
+    include ldapauth::client
 }
+```
+
+Then configure Hiera, for example :
+
+/etc/puppetlabs/code/environments/production/data/common.yaml
+
+```
+---
+ldapauth::client::basedn: dc=int,dc=morot,dc=fr
+ldapauth::client::servers:
+  - master.int.morot.fr
+  - slave.int.morot.fr
 ```
 
 Example for user and group definition :

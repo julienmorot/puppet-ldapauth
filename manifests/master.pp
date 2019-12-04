@@ -1,7 +1,16 @@
-class ldapauth::master(String $basedn = $domain, String $rootpwd = 'notverysecret') inherits ldapauth::params {
+class ldapauth::master(String $basedn, String $rootpwd) {
 
     $pkgdep = ['ldap-utils']
     package { $pkgdep: ensure => present }
+
+    Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ] }
+
+    File { "/root/.${module_name}":
+        ensure  => directory,
+        owner   => "root",
+        group   => "root",
+        mode    => "700",
+    }
 
     File { "slapd.preseed":
         path    => "/var/cache/debconf/slapd.preseed",
@@ -47,7 +56,6 @@ class ldapauth::master(String $basedn = $domain, String $rootpwd = 'notverysecre
     Exec { 'add_provider':
         command  => "ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /root/.${module_name}/provider.ldif && touch /root/.${module_name}/provider.ldif.done",
         cwd      => "/root",
-        path     => '/usr/bin:/usr/sbin:/bin:/sbin',
         provider => shell,
         unless   => ["test -f /root/.${module_name}/provider.ldif.done"],
         require  => [ Package["slapd"],File["provider.ldif"] ],
@@ -73,7 +81,6 @@ class ldapauth::master(String $basedn = $domain, String $rootpwd = 'notverysecre
     Exec { 'add_base_dit':
         command  => "ldapadd -x -w ${rootpwd} -D cn=admin,${basedn} -H ldap:// -f /root/.${module_name}/base_dit.ldif && touch /root/.${module_name}/base_dit.ldif.done",
         cwd      => "/root",
-        path     => '/usr/bin:/usr/sbin:/bin:/sbin',
         provider => shell,
         unless   => ["test -f /root/.${module_name}/base_dit.ldif.done"],
         require  => [ Package["slapd"],File["base_dit.ldif"] ],

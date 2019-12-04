@@ -1,4 +1,4 @@
-class ldapauth::ppolicyslave(String $basedn = $domain, String $rootpwd = 'notverysecret') inherits ldapauth::params {
+class ldapauth::ppolicyslave(String $basedn, String $rootpwd) {
 
     Exec { "add_ppolicy_schema":
         command  => "ldapadd -Q -Y EXTERNAL -H ldapi:/// -f  /etc/ldap/schema/ppolicy.ldif && touch /root/.${module_name}/ppolicy.schema.ldif.done",

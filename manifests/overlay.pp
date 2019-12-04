@@ -1,4 +1,4 @@
-class ldapauth::overlay inherits ldapauth::params {
+class ldapauth::overlay {
 
     File { "memberof.ldif":
         path    => "/root/.${module_name}/memberof.ldif",

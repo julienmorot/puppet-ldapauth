@@ -1,7 +1,9 @@
-class ldapauth::client (String $basedn = 'dc=domain,dc=tld', Array $servers = ['ldap:://srv1', 'ldap://srv2']) inherits ldapauth::params { 
+class ldapauth::client ( String $basedn, Array $servers) {
 
     $pkgdep = ['libpam-modules']
     Package { $pkgdep: ensure => present }
+
+    Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ] }
 
     File { "libnss-ldap.preseed":
         path    => "/var/cache/debconf/libnss-ldap.preseed",

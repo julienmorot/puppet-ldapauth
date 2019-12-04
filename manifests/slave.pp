@@ -1,7 +1,16 @@
-class ldapauth::slave(String $basedn = $domain, String $rootpwd = 'notverysecret', String $ldapmaster, String $ldapreplpwd = 'notverysecret') inherits ldapauth::params {
+class ldapauth::slave(String $basedn, String $rootpwd, String $ldapmaster, String $ldapreplpwd) {
 
     $pkgdep = ['ldap-utils']
     package { $pkgdep: ensure => present }
+
+    Exec { path => [ '/bin/', '/sbin/' , '/usr/bin/', '/usr/sbin/' ] }
+
+    File { "/root/.${module_name}":
+        ensure  => directory,
+        owner   => "root",
+        group   => "root",
+        mode    => "700",
+    }
 
     File { "slapd.preseed":
         path    => "/var/cache/debconf/slapd.preseed",
@@ -30,7 +39,6 @@ class ldapauth::slave(String $basedn = $domain, String $rootpwd = 'notverysecret
     Exec { 'add_consumer':
         command  => "ldapadd -Q -Y EXTERNAL -H ldapi:/// -f /root/.${module_name}/consumer.ldif && touch /root/.${module_name}/consumer.ldif.done",
         cwd      => "/root",
-        path     => "/usr/bin:/usr/sbin:/bin:/sbin",
         provider => shell,
         unless   => ["test -f /root/.${module_name}/consumer.ldif.done"],
         require  => [ Package["slapd"],File["consumer.ldif"] ]
